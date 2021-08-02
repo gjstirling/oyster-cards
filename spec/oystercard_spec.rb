@@ -15,4 +15,10 @@ describe Oystercard do
     end
   end
 
+  describe 'deduct' do
+    it "deducts money from card" do
+      expect(Oystercard.new(10).deduct(5)).to eq(5)
+    end
+  end
+
 end
