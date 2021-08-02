@@ -1,4 +1,8 @@
 # oyster-cards
 Week 2 afternoon pairing workshop
 
-Hello Read me file
+In order to use public transport
+As a customer
+I want money on my card
+
+domain model = oystercard --> Addmoney
