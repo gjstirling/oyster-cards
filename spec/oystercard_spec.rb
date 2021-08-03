@@ -15,12 +15,6 @@ describe Oystercard do
     end
   end
 
-  describe 'deduct' do
-    it "deducts money from card" do
-      expect(subject.deduct(5)).to eq(5)
-    end
-  end
-
   describe 'touch_in' do 
     it "Registering when a card instance is beginning a journey" do 
       subject.touch_in
@@ -34,10 +28,14 @@ describe Oystercard do
 
   describe 'touch_out' do 
     it "Registering when a card instance is finished a journey" do 
-      subject.touch_out
+      subject.touch_out(5)
       expect(subject.journey).to eq(false)
     end
-  end  
+
+    it "should deduct fare from balance" do
+      expect {subject.touch_out(5)}.to change{subject.balance}.by(-5)
+    end  
+  end
   
   describe 'in_journey?' do 
     it "Checks if card is in transit" do 

@@ -17,21 +17,24 @@ attr_reader :balance, :journey
     @balance += money
   end 
 
-  def deduct(money)
-    @balance -= money
-  end
-
   def touch_in
     raise "Insufficient funds to travel" unless @balance >= MINIMUM_BALANCE
     @journey = true
   end 
 
-  def touch_out
+  def touch_out(fare)
+    deduct(fare)
     @journey = false
   end
 
   def in_journey?
     @journey
+  end
+
+  private
+
+  def deduct(money)
+    @balance -= money
   end
 
 end
