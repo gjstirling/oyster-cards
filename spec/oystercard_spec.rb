@@ -3,7 +3,7 @@ require "station"
 
 describe Oystercard do 
   subject(:oystercard) { described_class.new(10) }
-  let(:station) { Station.new }
+  let(:station) { double(Station.new) }
   it { is_expected.to respond_to(:top_up).with(1).argument } 
   it { expect(subject.balance).to eq(10) }
 
