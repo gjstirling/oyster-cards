@@ -1,7 +1,9 @@
 require "oystercard"
+require "station"
 
 describe Oystercard do 
   subject(:oystercard) { described_class.new(10) }
+  let(:station) { Station.new }
   it { is_expected.to respond_to(:top_up).with(1).argument } 
   it { expect(subject.balance).to eq(10) }
 
@@ -16,30 +18,31 @@ describe Oystercard do
   end
 
   describe 'touch_in' do 
-    it "Registering when a card instance is beginning a journey" do 
-      subject.touch_in
-      expect(subject.journey).to eq(true)
+    it "Card needs minimum balance to touch_in" do 
+      expect { Oystercard.new(0).touch_in(station) }.to raise_error "Insufficient funds to travel"
     end
 
-    it "Card needs minimum balance to touch_in" do 
-      expect { Oystercard.new(0).touch_in }.to raise_error "Insufficient funds to travel"
+    it "should record entry station" do
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq(station)
     end
   end 
 
   describe 'touch_out' do 
-    it "Registering when a card instance is finished a journey" do 
-      subject.touch_out(5)
-      expect(subject.journey).to eq(false)
-    end
-
     it "should deduct fare from balance" do
       expect {subject.touch_out(5)}.to change{subject.balance}.by(-5)
     end  
+
+    it "should empty entry station" do
+      subject.touch_out(5)
+      expect(subject.entry_station).to eq(nil)
+    end
   end
   
   describe 'in_journey?' do 
     it "Checks if card is in transit" do 
-      expect(Oystercard.new(10, true).in_journey?).to eq(true)
+      subject.touch_in(station)
+      expect(subject.in_journey?).to eq(true)
     end
   end
 end
