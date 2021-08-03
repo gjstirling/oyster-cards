@@ -1,7 +1,7 @@
 require "oystercard"
 
 describe Oystercard do 
-  subject(:oystercard) { described_class.new }
+  subject(:oystercard) { described_class.new(10) }
   it { is_expected.to respond_to(:top_up).with(1).argument } 
   it { expect(subject.balance).to eq(0) }
 
@@ -25,6 +25,10 @@ describe Oystercard do
     it "Registering when a card instance is beginning a journey" do 
       subject.touch_in
       expect(subject.journey).to eq(true)
+    end
+
+    it "Card needs minimum balance of £1 to touch_in" do 
+      expect { subject.touch_in }.to raise_error "Insufficient funds to travel"
     end
   end 
 

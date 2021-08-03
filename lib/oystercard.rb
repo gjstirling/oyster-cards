@@ -19,6 +19,7 @@ attr_reader :balance, :limit, :journey
   end
 
   def touch_in
+    raise "Insufficient funds to travel" unless @balance >= 1
     @journey = true
   end 
 
