@@ -1,12 +1,11 @@
 class Oystercard
 
-attr_reader :balance
-attr_reader :limit
-
-
-  def initialize(balance = 0)
+attr_reader :balance, :limit, :journey
+  
+  def initialize(balance = 0, journey = false)
     @balance = balance
     @limit = 90
+    @journey = journey
   end 
 
   def top_up(money)
@@ -17,6 +16,18 @@ attr_reader :limit
 
   def deduct(money)
     @balance -= money
+  end
+
+  def touch_in
+    @journey = true
+  end 
+
+  def touch_out
+    @journey = false
+  end
+
+  def in_journey?
+    @journey
   end
 
 end

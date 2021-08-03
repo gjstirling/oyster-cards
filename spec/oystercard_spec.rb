@@ -21,4 +21,23 @@ describe Oystercard do
     end
   end
 
+  describe 'touch_in' do 
+    it "Registering when a card instance is beginning a journey" do 
+      subject.touch_in
+      expect(subject.journey).to eq(true)
+    end
+  end 
+
+  describe 'touch_out' do 
+    it "Registering when a card instance is finished a journey" do 
+      subject.touch_out
+      expect(subject.journey).to eq(false)
+    end
+  end  
+  
+  describe 'in_journey?' do 
+    it "Checks if card is in transit" do 
+      expect(Oystercard.new(10, true).in_journey?).to eq(true)
+    end
+  end
 end
