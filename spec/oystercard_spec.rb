@@ -4,6 +4,7 @@ require "station"
 describe Oystercard do 
   subject(:oystercard) { described_class.new(10) }
   let(:station) { double(Station.new) }
+  let(:station2) { double(Station.new) }
   it { is_expected.to respond_to(:top_up).with(1).argument } 
   it { expect(subject.balance).to eq(10) }
 
@@ -30,12 +31,18 @@ describe Oystercard do
 
   describe 'touch_out' do 
     it "should deduct fare from balance" do
-      expect {subject.touch_out(5)}.to change{subject.balance}.by(-5)
+      expect {subject.touch_out(5, station)}.to change{subject.balance}.by(-5)
     end  
 
     it "should empty entry station" do
-      subject.touch_out(5)
+      subject.touch_out(5, station)
       expect(subject.entry_station).to eq(nil)
+    end
+
+    it "Checks card has recorded a single completed journey" do 
+      subject.touch_in(station)
+      subject.touch_out(5, station2)
+      expect(subject.journey_history).to eq([{:station => station2}])
     end
   end
   
@@ -45,4 +52,9 @@ describe Oystercard do
       expect(subject.in_journey?).to eq(true)
     end
   end
+
+  it "@journey_history has set default attribute" do 
+    expect(subject.journey_history).to eq([])
+  end
+
 end
