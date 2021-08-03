@@ -3,8 +3,8 @@ require "station"
 
 describe Oystercard do 
   subject(:oystercard) { described_class.new(10) }
-  let(:station) { double(Station.new) }
-  let(:station2) { double(Station.new) }
+  let(:entry_station) { double(Station.new) }
+  let(:exit_station) { double(Station.new) }
   it { is_expected.to respond_to(:top_up).with(1).argument } 
   it { expect(subject.balance).to eq(10) }
 
@@ -20,35 +20,34 @@ describe Oystercard do
 
   describe 'touch_in' do 
     it "Card needs minimum balance to touch_in" do 
-      expect { Oystercard.new(0).touch_in(station) }.to raise_error "Insufficient funds to travel"
+      expect { Oystercard.new(0).touch_in(entry_station) }.to raise_error "Insufficient funds to travel"
     end
 
     it "should record entry station" do
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq(station)
+      subject.touch_in(entry_station)
+      expect(subject.entry_station).to eq(entry_station)
     end
   end 
 
   describe 'touch_out' do 
     it "should deduct fare from balance" do
-      expect {subject.touch_out(5, station)}.to change{subject.balance}.by(-5)
+      expect {subject.touch_out(5, exit_station)}.to change{subject.balance}.by(-5)
     end  
 
     it "should empty entry station" do
-      subject.touch_out(5, station)
+      subject.touch_out(5, exit_station)
       expect(subject.entry_station).to eq(nil)
     end
 
     it "Checks card has recorded a single completed journey" do 
-      subject.touch_in(station)
-      subject.touch_out(5, station2)
-      expect(subject.journey_history).to eq([{:station => station2}])
+      subject.touch_out(5, exit_station)
+      expect(subject.journey_history).to eq([{subject.entry_station => exit_station}])
     end
   end
   
   describe 'in_journey?' do 
     it "Checks if card is in transit" do 
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       expect(subject.in_journey?).to eq(true)
     end
   end

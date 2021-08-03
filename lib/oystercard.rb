@@ -25,7 +25,7 @@ attr_reader :balance, :entry_station, :journey_history
   end 
 
   def touch_out(fare, exit_station)
-    @journey_history.push({:@entry_station => exit_station})
+    @journey_history.push({@entry_station => exit_station})
     @entry_station = nil
     deduct(fare)
   end
