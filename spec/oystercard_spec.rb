@@ -27,6 +27,12 @@ describe Oystercard do
       subject.touch_in(entry_station)
       expect(subject.entry_station).to eq(entry_station)
     end
+    
+    it "Raise error is touch in without touch out" do 
+      subject.touch_in(entry_station)
+      expect { subject.touch_in(entry_station) }.to raise_error "Last journey incomplete"
+    end
+  
   end 
 
   describe 'touch_out' do 
